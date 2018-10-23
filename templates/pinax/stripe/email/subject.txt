@@ -1,0 +1,1 @@
+[{{ site.name }}] Charity Payment Receipt (Invoice #{{ charge.pk }})

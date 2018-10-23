@@ -1,0 +1,197 @@
+{% extends "_admin_base.html" %}
+{% load staticfiles %}
+{% block headerpagetitle %}{{ store.userprofile.name}} Details{% endblock headerpagetitle %}
+
+{% block headerbread %}
+{% endblock headerbread %}
+
+{% block styles %}
+{% endblock styles %}
+
+{% block pagespecificstyles %}
+{% endblock pagespecificstyles %}
+
+{% load crispy_forms_tags %}
+{% load render_table from django_tables2 %}
+{% load querystring from django_tables2 %}
+{% load djmoney %}
+{% load stripe_tags %}
+
+{% block extrahead %}
+{% endblock extrahead %}
+
+{% block shopifyhead %}
+{% endblock shopifyhead %}
+
+{% block extra_messages %}
+{% endblock %}
+
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb "Stores" "main_app:admin_store_list" %}
+    {% breadcrumb store.userprofile.name "#" %}
+{% endblock %}
+
+{% block body %}
+
+<div class="panel panel-default">
+  <div class="panel-heading clearfix">
+
+      <div class="row">
+          <div class="col-xs-12 col-sm-6">
+              <div class="tabbable-line">
+                  <ul class="nav nav-tabs">
+                      <li class="active">
+                          <a href="#">Details</a>
+                      </li>
+                      <li>
+                          <a href="{% url 'main_app:admin_store_roundups' pk=store.id %}">Roundups</a>
+                      </li>
+                      <li>
+                          <a href="{% url 'main_app:admin_store_transfers' pk=store.id %}">Invoices</a>
+                      </li>
+                  </ul>
+              </div>
+          </div>
+
+          <div class="col-xs-12 col-sm-6">
+              <h3 class="pull-right store-status-label">
+                  {% if store.active_installation %}
+                  <span class="label label-success">Shopify: Active</span>
+                  {% else %}
+                  <span class="label label-default">Shopify: Inactive</span>
+                  {% endif %}
+
+                  {{ store | stripe_sub_status |safe }}
+
+              </h3>
+          </div>
+      </div>
+
+  </div>
+
+  <div class="panel-body">
+      <div class="tab-content">
+          <div class="tab-pane active">
+              <div class="row">
+                  <div class="col-xs-12">
+                    <h4>Shop details</h4>
+                  </div>
+                  <div class="col-xs-12 col-sm-6">
+                      <table class="table table-striped">
+                          <tbody>
+                          <tr>
+                              <td>Joined:</td>
+                              <td>{{ store.userprofile.created }}</td>
+                          </tr>
+                          <tr>
+                              <td>Website:</td>
+                              <td><a href="//{{ store.myshopify_domain }}" target="_blank">{{ store.myshopify_domain }}</a></td>
+                          </tr>
+                          <tr>
+                              <td>Email:</td>
+                              <td><a href="mailto:{{ store.userprofile.shop_contact_email }}">{{ store.userprofile.shop_contact_email }}</a></td>
+                          </tr>
+                          <tr>
+                              <td>Phone:</td>
+                              <td>{{ shopify_details.phone }}</td>
+                          </tr>
+                          </tbody>
+                      </table>
+
+                      <table class="table table-striped">
+                          <tbody>
+                          <tr>
+                              <td>Shop owner:</td>
+                              <td>{{ shopify_details.shop_owner }}</td>
+                          </tr>
+                          <tr>
+                              <td>Customer email:</td>
+                              <td><a href="mailto:{{ shopify_details.customer_email }}">{{ shopify_details.customer_email }}</a></td>
+                          </tr>
+                          </tbody>
+                      </table>
+                  </div>
+
+                  <div class="col-xs-12 col-sm-6">
+                      <table class="table table-striped">
+                          <tbody>
+                          <tr>
+                              <td>Lifetime Total Roundups:</td>
+                              <td class="text-right"><b>{{ round_up_count }}</b></td>
+                              <!--TODO DEBUGD OUT <td class="text-right">{% money_localize round_up_total %}</td>-->
+                          </tr>
+                          <tr>
+                              <td>Paid Invoices:</td>
+                              <td class="text-right"><b>{{ stripe_invoice_count }}</b></td>
+                              <!--TODO DEBUGD OUT <td class="text-right">{% money_localize stripe_invoice_sum %}</td>-->
+                          </tr>
+                          <tr>
+                              <td>Pending Orders/Donations:</td>
+                              <td class="text-right"><b>{{ pending_round_up_count}}</b></td>
+                              <!--TODO DEBUGD OUT <td class="text-right">{% money_localize pending_round_up_total %}{% if converted_currency_USD %} <i>({% money_localize converted_currency_USD %} USD)</i>{% endif %}</td>-->
+                          </tr>
+                          <tr>
+                              <td>Selected Charity:</td>
+                              <td class="text-right">{{ store.store_charity.selected_charity.name }}</td>
+                          </tr>
+                          </tbody>
+                      </table>
+                  </div>
+
+              </div>
+
+              <hr>
+
+              <div class="row">
+                  <div class="col-xs-12">
+                    <h4>Subscription details</h4>
+                  </div>
+                  <div class="col-sm-12 col-md-6">
+                      <table class="table table-striped">
+                          <tbody>
+                          <tr>
+                              <td class="text-left">Plan: {{ subscription.plan.name|default:"None" }}</td>
+                          </tr>
+                          <tr>
+                              <td class="text-left">Stripe Subscription: {{ subscription.stripe_id|default:"None" }}</td>
+                          </tr>
+                          <tr>
+                              <td class="text-left">Plan high compliance failures: {{ subscription.stripe_sub.high_plan_compliance_tracker|default:"None" }}</td>
+                          </tr>
+                          <tr>
+                              <td class="text-left">Plan low compliance failures: {{ subscription.stripe_sub.low_plan_compliance_tracker|default:"None" }}</td>
+                          </tr>
+                          <tr>
+                              <td class="text-left"><strong>Plan locked in: {{ subscription.stripe_sub.plan_locked }}</strong></td>
+                          </tr>
+                          </tbody>
+                      </table>
+                  </div>
+                  <div class="col-sm-12 col-md-6">
+                      <form method="POST">{% csrf_token %}
+                      <div class="btn-group-vertical">
+                            <button type="submit" id="sub-lock" name="sub-lock" value="sub-lock" data-api-src="" class="btn btn-danger">Lock/Unlock this customers subscription plan</button>
+                            <button type="submit" id="switch-high" name="switch-high" value="switch-high" class="btn btn-default" {% if subscription.plan and subscription.plan.stripe_id == "high-volume-round-up-plan" %}disabled{% endif %}>Switch to High usage plan</button>
+                            <button type="submit" id="switch-low" name="switch-low" value="switch-low" class="btn btn-default" {% if subscription.plan and subscription.plan.stripe_id == "low-volume-round-up-plan" %}disabled{% endif %}>Switch to Low usage plan</button>
+                      </div>
+                      </form>
+                  </div>
+                  <div class="col-xs-12">
+                      <blockquote>{{ subscription.stripe_sub.reason|default:"No active subscription." }}</blockquote>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+  </div>
+</div>
+
+{% endblock %}
+
+{% block pagespecificjs %}
+{% endblock pagespecificjs %}
+
+{% block scripts %}
+{% endblock %}

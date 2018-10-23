@@ -1,0 +1,83 @@
+{% extends "_admin_base.html" %}
+{% load staticfiles %}
+{% block headerpagetitle %}{{ store.userprofile.name}} Roundups{% endblock headerpagetitle %}
+
+{% block headerbread %}
+{% endblock headerbread %}
+
+{% block styles %}
+{% endblock styles %}
+
+{% block pagespecificstyles %}
+{% endblock pagespecificstyles %}
+
+{% load crispy_forms_tags %}
+{% load render_table from django_tables2 %}
+{% load stripe_tags %}
+
+{% block extrahead %}
+{% endblock extrahead %}
+
+{% block shopifyhead %}
+{% endblock shopifyhead %}
+
+{% block extra_messages %}
+{% endblock %}
+
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb "Stores" "main_app:admin_store_list" %}
+    {% breadcrumb store.userprofile.name "#" %}
+{% endblock %}
+
+{% block body %}
+
+<div class="panel panel-default">
+  <div class="panel-heading clearfix">
+
+      <div class="row">
+          <div class="col-xs-12 col-sm-6">
+              <div class="tabbable-line">
+                  <ul class="nav nav-tabs">
+                      <li>
+                          <a href="{% url 'main_app:admin_store_detail' pk=store.id %}">Details</a>
+                      </li>
+                      <li class="active">
+                          <a href="#">Roundups</a>
+                      </li>
+                      <li>
+                          <a href="{% url 'main_app:admin_store_transfers' pk=store.id %}">Invoices</a>
+                      </li>
+                  </ul>
+              </div>
+          </div>
+
+          <div class="col-xs-12 col-sm-6">
+              <h3 class="pull-right store-status-label">
+                  {% if store.active_installation %}
+                  <span class="label label-success">Shopify: Active</span>
+                  {% else %}
+                  <span class="label label-default">Shopify: Inactive</span>
+                  {% endif %}
+
+                  {{ store | stripe_sub_status |safe }}
+
+              </h3>
+          </div>
+      </div>
+
+  </div>
+
+  <div class="panel-body">
+    {% render_table table %}
+  </div>
+</div>
+
+{% endblock %}
+
+{% block pagespecificjs %}
+{% endblock pagespecificjs %}
+
+{% block scripts %}
+{% endblock %}

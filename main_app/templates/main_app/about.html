@@ -1,0 +1,137 @@
+{% extends "_base.html" %}
+{% load staticfiles %}
+{% block headerpagetitle %}About us{% endblock headerpagetitle %}
+
+{% block headerbuttons %}
+
+primary: {"label":"Setup Instructions","target":"app","href":"{% url 'main_app:tutorial' store_url=request.user.store_url_str %}"},
+secondary: [{"label":"My Charity Orders","target":"app","href":"{% url 'main_app:transaction_list' store_url=request.user.store_url_str %}"},
+{"label":"Charity Settings","target":"app","href":"{% url 'main_app:charity_selection' store_url=request.user.store_url_str %}"},
+{"label":"Payment Settings","target":"app","href":"{% url 'main_app:payment_information' store_url=request.user.store_url_str %}"},
+{ "label": "•••",
+                type: "dropdown",
+                links: [
+                         {"label":"About Vesey","target":"app","href":"{% url 'main_app:about' store_url=request.user.store_url_str %}"},
+                         {"label":"Contact us","target":"app","href":"{% url 'main_app:contact' store_url=request.user.store_url_str %}"},
+                         {"label":"Installation instructions","target":"app","href":"{% url 'main_app:tutorial' store_url=request.user.store_url_str %}"},
+                       ]
+            }]
+{% endblock headerbuttons %}
+
+{% block headerbread %}
+{% endblock headerbread %}
+
+{% block styles %}
+
+{% endblock styles %}
+
+{% load crispy_forms_tags %}
+
+{% block extrahead %}
+{% endblock extrahead %}
+
+{% block shopifyhead %}
+{% endblock shopifyhead %}
+
+{% block extra_messages %}
+{% endblock %}
+
+{% block body %}
+
+    <div class="container">
+        <div class="page-header">
+            <h1><img src="{% static 'site/images/logo.png' %}"> <small>About Us Page</small></h1>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-body">
+
+                <div class="row">
+
+                    <div class="col-xs-12">
+                        <p>The Vesey Foundation is a 501(c)3 organization that works to empower innovative non-profits around the world.</p>
+                    </div>
+                    <div class="col-xs-12">
+                        <p>The Round Up program was developed to provide a steady stream of income to our charitable partners so that they can exponentially improve their results. Thanks to a generous endowment, this program comes at no cost to you and 100% of all donations collected through the Round Up program are passed onto our nonprofit partners.</p>
+                    </div>
+                    <div class="col-xs-12">
+                        <p>Below you will find answers to commonly asked questions. If you have any additional questions please feel free to contact us here.</p>
+                    </div>
+                    <hr>
+                    <div class="col-xs-12">
+                        <h3>What is the Change for Change program?</h3>
+                        <p>The Change for Change program is the 21st century version of a donation collection box. Instead of customers dropping spare change into a penny jar on the countertop, they can instead donate a few cents directly from their credit card.</p>
+                    </div>
+                    <div class="col-xs-12">
+                        <h3>Who is the Vesey Foundation?</h3>
+                        <p>The Vesey Foundation is a 501(c)3 non-profit organization based in New York with a global focus.</p>
+                        <br>
+                        <p>The Vesey Foundation supports innovative solutions to global problems. Through our partners, we have pursued advancements in medical technologies, expanded STEM education in the United States and abroad, and provides access to clean energy worldwide.</p>
+                    </div>
+                    <div class="col-xs-12">
+                        <h3>Where does my donation go?</h3>
+                        <p>The Vesey Foundation works with a variety of accredited non-profit partner organizations such as The American Cancer Society, Charity:Water, and New York on Tech.</p>
+                        <br>
+                        <p>We also work with our ecommerce partners to continuously expand the organizations we support. We donate on your behalf to any particular charity or cause that you are passionate about.</p>
+                    </div>
+                    <div class="col-xs-12">
+                        <h3>How much of my donation actually goes to the intended cause?</h3>
+                        <p>All of it! 100% of all donations go directly to selected causes.</p>
+                        <br>
+                        <p>How is this possible? Our corporate sponsors and endownment subsidize all operating expenses so that we can distribute all donations directly to these remarkable initiatives.</p>
+                    </div>
+                    <div class="col-xs-12">
+                        <h3>Will my customers support this?</h3>
+                        <p>Yes! We have conducted independent studies and pilot programs to ensure that your customers fully support this initiative and approve of your restaurant for participating. We provide you with simple informational materials so your customers understand the program, how to participate, and the value your business provides.</p>
+                    </div>
+                    <div class="col-xs-12">
+                        <h3>What does it cost to participate?</h3>
+                        <p>Nothing! The Vesey Foundations covers all costs related to integrating your existing POS system with the Change for Change software and provides all marketing collateral for your business. You just have to take a few minutes to train your staff with this new POS functionality.</p>
+                    </div>
+                    <div class="col-xs-12">
+                        <h3>What is the time commitment?</h3>
+                        <p>Just a few minutes each month! Once you are set up the only time commitment is teaching your staff about this new functionality, which typically only takes a few minutes.</p>
+                        <br>
+                        <p>We can also provide a representative to prepare your staff for the launch of this program at no cost to you. The only other time commitment involves distributing the total donations to the Vesey Foundation each month by check, credit card, PayPal or bank transfer.</p>
+                    </div>
+                    <div class="col-xs-12">
+                        <h3>How does the technology work?</h3>
+                        <p>We work directly with your current Point-of-Sale (POS) or payment processing system to implement the necessary changes to make the launch of the Change for Change program completely seamless for your staff.</p>
+                        <br>
+                        <p>One of our representatives will handle this integration in less than one hour without interfering with normal business operations. From there on, the check out process will automatically ask customers if they want to "round up" their total purchase amount.</p>
+                        <br>
+                        <p>Sales reports will state exactly how much of the round up donations were collected in a given time period.</p>
+                    </div>
+                    <div class="col-xs-12">
+                        <h3>How will the new checkout page look?</h3>
+                        <p>Each website may have a slightly different look, but it is always generally the same. Below is a sample of what the checkout looks for Shopify websites:</p>
+                        <br>
+                    </div>
+                    <div class="col-xs-12">
+                        <img class="img-thumbnail img-responsive" src="{% static 'site/images/E-commerce_round_up.jpg' %}">
+                    </div>
+                    <div class="col-xs-12">
+                        <h3>Can I write off the donations as a tax-deductible?</h3>
+                        <p>Yes! We will send you a form that verifies that your donation is tax-deductible up to the maximum amount allowed by law.</p>
+                    </div>
+                    <div class="col-xs-12">
+                        <h3>How does the signup process work?</h3>
+                        <p>Just contact us by phone, email, or through our website to begin the setup process. A representative will get in touch by phone or in-person to answer any questions you may have and schedule a time to begin the system integration. That’s it!</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}
+
+
+{% block beaconsuggest %}
+{% endblock beaconsuggest %}
+
+{% block scripts %}
+
+{% endblock %}

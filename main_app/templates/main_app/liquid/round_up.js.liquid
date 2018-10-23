@@ -1,0 +1,204 @@
+if (typeof jQuery === 'undefined') {
+    document.write( {% templatetag openvariable %}"https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js" | script_tag | json {% templatetag closevariable %});
+    document.write('<script type="text/javascript">jQuery.noConflict();<\/script>');
+}
+
+jQuery.fn.visible = function() {
+    return this.css('visibility', 'visible').hide().fadeIn('slow');
+};
+
+jQuery.fn.invisible = function() {
+    return this.css('visibility', 'hidden');
+};
+
+jQuery(document).ready(function () {
+
+    /////////////////////////
+    // Variable and local function definition
+    /////////////////////////
+
+    var vesey_charity_embed_div = jQuery('#vesey_charity_embed_div');
+    var css_url = '{% templatetag openvariable %} "round_up.css" | asset_url {% templatetag closevariable %}';
+    var _total;
+    var _roundDifference;
+    var _roundDifferenceHTML;
+    var _currency;
+    var app_derived_currency = "{{ money_symbol }}";
+    // Loaded and updated from App
+    var round_up_variant_id = {{ product_variant_id|default_if_none:"false" }};
+    var round_up_popover_description = "{{ round_up_popover_description|safe }}";
+
+    var global_resultPrice = 0
+
+    var changeRoundUpText = function(popover_description) {
+        // Find and replace text of roundup popover
+        jQuery('#vesey_charity_embed_tooltip').html('<span class="vesey_charity_embed_tooltiptext">' + popover_description + '</span>');
+
+        // Add the popover text and formatting
+        jQuery('#vesey_charity_embed_tooltip').addClass('vesey_charity_embed_question_mark');
+
+        // Make the charity roundup element visible
+        jQuery(vesey_charity_embed_div).visible();
+    };
+
+    var clearCart = function() {
+        jQuery.getJSON('/cart.js', function (cart) {
+            jQuery.each(cart.items, function( index, value ) {
+                if(value.id == round_up_variant_id){
+                    jQuery.ajax({
+                        type: 'POST',
+                        url: '/cart/update.js',
+                        async: false,
+                        data: "updates["+round_up_variant_id+"]=0",
+                        dataType: 'json',
+                        error: function(){
+                            console.log("Something went wrong clearing cart");
+                        },
+                        success: function() {
+                            location.reload();
+                        }
+                    });
+                }
+            });
+        });
+    }
+
+    var addDonation = function (resultPrice) {
+        console.debug("addDonation result price: " + resultPrice);
+
+        var params = {
+            type		: 'POST',
+            url			: '/cart/add.js',
+            async: false,
+            data		: 'quantity=' + resultPrice + '&id=' + round_up_variant_id,
+            dataType	: 'json',
+            success		: function(line_item) {
+                jQuery.noop()
+            },
+            error		: function() {
+                jQuery.noop()
+            }
+        };
+        return jQuery.ajax(params);
+    }
+
+    var configureCartItems = function(checkbox) {
+        clearCart();
+
+        // If "checked" add items to cart
+        if (checkbox.is(':checked')) {
+            localStorage.setItem("round_up_checkbox_status", true);
+
+            // calculate difference
+            _total                = String(jQuery(vesey_charity_embed_div).data( "cart-total" )).replace(/[^\d.-]/g, "");
+            _roundDifference      = Math.ceil(_total);
+            _roundDifferenceHTML  = parseFloat(_roundDifference) - _total;
+            _currency             = app_derived_currency;
+
+            // show in view
+            if(_roundDifference == _total){
+                _roundDifferenceHTML = 0.5;
+            }
+
+            var roundPrice = _currency + _roundDifferenceHTML.toFixed(2);
+            jQuery('#vesey_charity_embed_round_difference').html(roundPrice.replace('/\s+/', ""));
+
+            global_resultPrice = (""+_roundDifferenceHTML.toFixed(2)).replace("0.", "");
+
+            console.debug("setting local roundPrice: " + roundPrice);
+            console.debug("setting global result price: " + global_resultPrice);
+
+        }
+        else {
+            localStorage.setItem("round_up_checkbox_status", false);
+        }
+    };
+
+    var insertDynamicCSS = function() {
+        if(jQuery(vesey_charity_embed_div).length>0){
+
+            jQuery(vesey_charity_embed_div).invisible();
+
+            if (document.createStyleSheet){
+                document.createStyleSheet('' + css_url + '');
+                return true;
+            }
+            else {
+                jQuery("head").append($('<link rel="stylesheet" href="' + css_url + '" type="text/css" media="screen" />'));
+                return true;
+            }
+
+            return false;
+        }
+        else {
+            return false;
+        }
+    };
+
+    /////////////////////////
+    // Vesey Roundup Logic
+    /////////////////////////
+
+    if (typeof(Storage) !== "undefined") {
+
+        var round_up_checkbox_status = localStorage.getItem('round_up_checkbox_status');
+
+        if (round_up_checkbox_status == null) {
+            round_up_checkbox_status = true;
+            jQuery('#vesey_charity_embed_checkbox').prop('checked', true);
+            localStorage.setItem("round_up_checkbox_status", true);
+        }
+        else if (round_up_checkbox_status == 'false') {
+            jQuery('#vesey_charity_embed_checkbox').prop('checked', false);
+        }
+        else {
+            jQuery('#vesey_charity_embed_checkbox').prop('checked', true);
+        }
+
+        // Insert CSS asset to cart header.
+        var css_inserted = false;
+        css_inserted = insertDynamicCSS();
+
+        // Make sure we have a roundup product ID
+        if (round_up_variant_id == false) {
+            return;
+        }
+
+        // Verify CSS was inserted.
+        if (css_inserted == false) {
+            // The CSS was not inserted, cancel script execution.
+            return;
+        }
+
+        // Bind to checkbox changes
+        jQuery('#vesey_charity_embed_checkbox').click(function(){
+            var checkbox = jQuery(this);
+            configureCartItems(checkbox);
+        });
+
+        // Instantiate the cart with round up item
+        configureCartItems(jQuery('#vesey_charity_embed_checkbox'));
+
+        // Change popover description and show main checkbox element
+        changeRoundUpText(round_up_popover_description);
+
+        jQuery('body').on('click', '[name="checkout"], [name="goto_pp"], [name="goto_gc"]', function(event) {
+
+            var round_up_checkbox_status = localStorage.getItem('round_up_checkbox_status');
+
+            if (round_up_checkbox_status == 'false') {
+                jQuery(this).submit();
+            }
+            else {
+                jQuery.when(addDonation(global_resultPrice)).done(function(){
+                    jQuery(this).submit();
+                });
+            }
+
+        });
+
+        if ('ontouchstart' in document.documentElement) {
+            $('body').css('cursor', 'pointer');
+        }
+    }
+});

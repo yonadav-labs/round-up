@@ -1,0 +1,213 @@
+{% extends "_base.html" %}
+{% load staticfiles %}
+{% block headerpagetitle %}Setup instructions{% endblock headerpagetitle %}
+
+{% block headerbuttons %}
+secondary: [{"label":"My Charity Orders","target":"app","href":"{% url 'main_app:transaction_list' store_url=request.user.store_url_str %}"},
+{"label":"Charity Settings","target":"app","href":"{% url 'main_app:charity_selection' store_url=request.user.store_url_str %}"},
+{"label":"Payment Settings","target":"app","href":"{% url 'main_app:payment_information' store_url=request.user.store_url_str %}"},
+{ "label": "•••",
+                type: "dropdown",
+                links: [
+                         {"label":"About Vesey","target":"app","href":"{% url 'main_app:about' store_url=request.user.store_url_str %}"},
+                         {"label":"Contact us","target":"app","href":"{% url 'main_app:contact' store_url=request.user.store_url_str %}"},
+                         {"label":"Installation instructions","target":"app","href":"{% url 'main_app:tutorial' store_url=request.user.store_url_str %}"},
+                       ]
+            }]
+{% endblock headerbuttons %}
+
+{% block headerbread %}
+{% endblock headerbread %}
+
+{% block styles %}
+
+{% endblock styles %}
+
+{% load crispy_forms_tags %}
+
+{% block extrahead %}
+{% endblock extrahead %}
+
+{% block shopifyhead %}
+{% endblock shopifyhead %}
+
+{% block extra_messages %}
+{% endblock %}
+
+{% block body %}
+    <div id="overlay"></div>
+    <div class="container">
+        <div class="page-header">
+            <h1><img src="{% static 'site/images/logo.png' %}"> <small>Setup Instructions</small></h1>
+        </div>
+
+
+          <div class="panel panel-info">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <span class="badge">1</span> Charity selection
+              </h4>
+            </div>
+              <div class="panel-body">
+
+                  <div class="jumbotron">
+                    <h3>Select a charity</h3>
+                    <p>Choose from one of our {{ active_charity_count }} charity partners.</p>
+                      <a class="btn btn-primary" href="{% url 'main_app:charity_selection' store_url=request.user.store_url_str %}">Choose now</a>
+                  </div>
+
+              </div>
+          </div>
+
+          <div class="panel panel-info">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <span class="badge">2</span> Liquid installation
+              </h4>
+            </div>
+              <div class="panel-body">
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <blockquote>
+                            <p>The next step of the installation process is to add a small snippet of code to your website. You can follow the instructions below to complete this step yourself or click on the <a href="#request-collaborator-account-button">"request help"</a> button for our tech team to complete this for you within the next 6 hours (at no cost).</p>
+                            <p>Questions? <a href="{% url 'main_app:contact' store_url=request.user.store_url_str %}">Contact us.</a></p>
+                        </blockquote>
+                        <h4>Installation video:</h4>
+                        <iframe width="854" height="480" src="https://www.youtube.com/embed/pMxpnzC7XBA" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                        <h4>Installation instructions:</h4>
+                        <ul>
+                            <li>
+                                <p>1. From the admin panel, click “Online Store” under “Sales Channels”</p>
+                            </li>
+                            <li>
+                                <p>2. Click on “Themes”</p>
+                            </li>
+                            <li>
+                                <p>3. Click on “Actions” in the top right of the page next to the Customize button</p>
+                            </li>
+                            <li>
+                                <p>4. Select “Edit Code”</p>
+                            </li>
+                            <li>
+                                <p>5. You will see a bunch of “.liquid” files. Find one called “cart.liquid” or “cart-template.liquid” and click on it.</p>
+                            </li>
+                            <li>
+                                <p>6. Since this file’s structure depends on the theme, we are going to give general placement directions however the exact place to put this code will vary depending on the theme.</p>
+                                <p>We recommend placing this code after where the subtotal is placed and before the submit button.</p>
+                                <pre>
+
+&lt;div id="vesey_charity_embed_div" style="visibility: hidden;" data-currency="{% templatetag openvariable %} shop.money_format {% templatetag closevariable %}" data-cart-total="{% templatetag openvariable %} cart.total_price | money_without_currency | remove: '.00' {% templatetag closevariable %}">
+
+    &lt;input type="checkbox" id="vesey_charity_embed_checkbox" checked="checked" />
+    &lt;label for="vesey_charity_embed_checkbox" id="vesey_charity_embed_label">Round Up for Charity?&lt;/label>
+    &lt;span id="vesey_charity_embed_tooltip">&lt;/span>
+    &lt;span id="vesey_charity_embed_round_difference">&lt;/span>
+
+&lt;/div>
+
+                                </pre>
+                                <img class="img-thumbnail img-responsive" src="{% static 'site/images/1.png' %}">
+                            </li>
+                            <li>
+                                <p>7. Click “Save” in the top right of the code editor section.</p>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+
+              <div class="panel-footer clearfix">
+                  <form>{% csrf_token %}<button id="request-collaborator-account-button" class="btn btn-primary pull-left" data-api-src="/{{ request.user.store_url_str }}/request-help/"><i id="help-btn-loading-icon" class="fa fa-circle-o-notch fa-spin fa-fw loader-fa-icon-hide"></i> Request help (let us do the work)</button></form>
+                  <a class="btn btn-default pull-right" href="{% url 'main_app:contact' store_url=request.user.store_url_str %}">Contact us</a>
+              </div>
+
+              </div>
+          </div>
+
+          <div class="panel panel-info">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <span class="badge">3</span> Payment setup
+              </h4>
+            </div>
+              <div class="panel-body">
+
+                  <div class="jumbotron">
+                    <h3>Setup your payment info</h3>
+                    <p>Use our payment partner <i>Stripe</i> to automate your charity donations.</p>
+                      <a class="btn btn-primary" href="{% url 'main_app:payment_information' store_url=request.user.store_url_str %}">Setup Stripe</a>
+                  </div>
+
+              </div>
+
+          </div>
+
+    </div>
+{% endblock %}
+
+{% block beaconsuggest %}
+{% endblock beaconsuggest %}
+
+{% block scripts %}
+<script>
+
+    // using jQuery get the Django CSRF token from cookies
+    function getCookieLocal(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    $(function() {
+        $("#request-collaborator-account-button").click(function(e) {
+            e.preventDefault();
+            var csrftoken = getCookieLocal('csrftoken');
+            var api_src = $(this).data('api-src');
+
+            ShopifyApp.Modal.confirm({
+                      title: "Request help from Vesey Foundation?",
+                      message: "The Vesey Foundation team will send you a request to add a Shopify partner collaborator account to your store. Once you accept this, we will add the code snippet within 6 hours.",
+                      okButton: "Yes, please help me",
+                      cancelButton: "No thanks"
+                }, function(result){
+                  if(result){
+                      $("#overlay").show();
+                      $("#help-btn-loading-icon").removeClass( "loader-fa-icon-hide" );
+
+                      $.ajax({
+                            type: "POST",
+                            url: api_src,
+                            data: {
+                                csrfmiddlewaretoken: csrftoken
+                            },
+                            success: function(result) {
+                                $("#help-btn-loading-icon").addClass( "loader-fa-icon-hide" );
+                                $("#overlay").hide();
+                                ShopifyApp.flashNotice("Your request was sent, please proceed to the next step.");
+                                // TODO We should then proceed the user to the next step if relevant
+                            },
+                            error: function(result) {
+                                $("#help-btn-loading-icon").addClass( "loader-fa-icon-hide" );
+                                $("#overlay").hide();
+                                ShopifyApp.flashError("Oops something went wrong, please contact us.");
+                            }
+                      });
+                  }
+            });
+
+        });
+    });
+
+</script>
+{% endblock %}

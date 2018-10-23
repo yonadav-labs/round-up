@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>{% include "_brandname.html" %} :: {% block title %}{% endblock %}</title>
+
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css'>
+  <link rel='stylesheet' href='{% static "site/css/app.css" %}'>
+
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+  <!-- jQuery library -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+  <!-- Latest compiled JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-messages.js"></script>
+
+  <script type="text/javascript" src="https://cdn.shopify.com/s/assets/external/app.js"></script>
+  <script type="text/javascript">
+        ShopifyApp.init({
+            apiKey: '{{ SHOPIFY_APP_API_KEY }}',
+            shopOrigin: 'https://{{ user.myshopify_domain }}'
+        });
+        ShopifyApp.ready(function() {
+            ShopifyApp.Bar.initialize({
+                title: '{% block headerpagetitle %}{% endblock headerpagetitle %}',
+                icon: "{% static 'site/images/Favicon-Icon-Alpha-min.png' %}",
+                buttons: {
+                {% block headerbuttons %}{% endblock headerbuttons %}
+                },
+                {% block headerpagination %}{% endblock headerpagination %}
+                {% block headerbread %}{% endblock headerbread %}
+                {% block headerextra %}{% endblock headerextra %}
+            });
+            {% block shopifyhead %}{% endblock shopifyhead %}
+        });
+    </script>
+
+    {% block styles %}
+    {% endblock styles %}
+
+    <!-- Custom tags for the head tag -->
+    {% block extrahead %}{% endblock extrahead %}
+
+</head>
+<body>
+
+	<!-- Start of full page banner alerts (should relate to contents of entire page) -->
+    {% block messages %}
+    {% endblock %}
+    {% block extra_messages %}
+    {% endblock %}
+    <!-- End full page Banner alert section -->
+
+    <!-- Loading image -->
+    <div id="loader">
+        <img src="{% static 'site/images/ripple-loading.gif' %}" /><br>
+        <h4 class="pending">Loading components...</h4>
+    </div>
+    <!-- Loading image end -->
+
+    <!-- Start of body content -->
+    <div class="Page__Content" id="page-content" style="display: none">
+        {% block body %}{% endblock %}
+    </div>
+    <!-- End of body content -->
+
+    {% block footer %}
+    <div class="footer">
+    </div>
+    {% endblock footer %}
+
+    {% block extrafoot %}{% endblock extrafoot %}
+
+    <script>
+    {% if messages %}
+        {% for message in messages %}
+            {% if 'warning' in message.tags or 'critical' in message.tags %}
+                ShopifyApp.flashError("{{ message|escapejs }}");
+            {% else %}
+                ShopifyApp.flashNotice("{{ message|escapejs }}");
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+    </script>
+
+    <script>
+        $.fn.extend({
+            animateLoading: function (content) {
+                var animationEnd = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+                this.addClass('animated fadeOut').one(animationEnd, function() {
+                    $(this).removeClass('animated fadeOut');
+                    $(this).hide()
+                    content.show().addClass('animated fadeIn').one(animationEnd, function() {
+                        content.removeClass('animated fadeIn');
+                    });
+                });
+                return this;
+            }
+        });
+        $(window).on("load", function() {
+            var loader = $('#loader');
+            var content = $('#page-content');
+            // Hide the loader
+            loader.animateLoading(content);
+        });
+    </script>
+
+    {% block scripts %}
+    {% endblock scripts %}
+  </body>
+</html>

@@ -1,0 +1,23 @@
+Hey there!
+
+Thanks again for downloading the Round Up app on your Shopify store ({{ myshopify_domain }})!
+
+It looks like you haven't completed setup of the app on your store. The following steps might still be outstanding:
+
+{{ required_steps_string }}
+
+For detailed instruction on installing the Round Up app on your store, please visit the link below. If you don’t feel comfortable installing this code yourself, we would be happy to install it for you at no cost. Just reply back to this email with a time that is convenient for you to be in front of the computer and our support team will screen share with you to get the code installed. The whole process takes less than 20 minutes!
+
+Code Installation Instructions: https://www.vesey.org/install
+
+If you have any questions about the Round Up app please feel free to contact me directly by email at team@vesey.org - you can also reply directly to this email. We answer all questions within 12 hours!
+
+Thank you for supporting local non-profit organizations!
+
+Cheers,
+
+Joshua Kleyman
+Director - Round Up
+Vesey Foundation
+335 Madison Ave, Fl. 4
+New York, NY 10017

@@ -1,0 +1,10 @@
+Here is an incoming question:
+Validated Store: {{ myshopify_domain }}
+Full name: {{ full_name }}
+Phone number: {{ phone_number }}
+Reply to email: {{ customer_email }}
+
+---------------------------------
+CUSTOMER'S MESSAGE FOLLOWS:
+---------------------------------
+{{ message }}

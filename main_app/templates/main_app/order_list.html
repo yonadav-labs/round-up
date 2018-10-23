@@ -1,0 +1,100 @@
+{% extends "_base.html" %}
+{% load staticfiles %}
+{% load djmoney %}
+{% load render_table from django_tables2 %}
+{% block headerpagetitle %}Charity Orders{% endblock headerpagetitle %}
+
+{% block headerbuttons %}
+primary: {"label":"Setup Instructions","target":"app","href":"{% url 'main_app:tutorial' store_url=request.user.store_url_str %}"},
+secondary: [{"label":"My Charity Orders","target":"app","href":"{% url 'main_app:transaction_list' store_url=request.user.store_url_str %}"},
+{"label":"Charity Settings","target":"app","href":"{% url 'main_app:charity_selection' store_url=request.user.store_url_str %}"},
+{"label":"Payment Settings","target":"app","href":"{% url 'main_app:payment_information' store_url=request.user.store_url_str %}"},
+{ "label": "•••",
+                type: "dropdown",
+                links: [
+                         {"label":"About Vesey","target":"app","href":"{% url 'main_app:about' store_url=request.user.store_url_str %}"},
+                         {"label":"Contact us","target":"app","href":"{% url 'main_app:contact' store_url=request.user.store_url_str %}"},
+                         {"label":"Installation instructions","target":"app","href":"{% url 'main_app:tutorial' store_url=request.user.store_url_str %}"},
+                       ]
+            }]
+{% endblock headerbuttons %}
+
+{% block headerbread %}
+{% endblock headerbread %}
+
+{% block styles %}
+{% endblock styles %}
+
+{% load crispy_forms_tags %}
+
+{% block extrahead %}
+    <script src="{% static  'site/js/jquery.fittext.js' %}"></script>
+    <script>
+      jQuery(".dash-stats-metric").fitText();
+    </script>
+{% endblock extrahead %}
+
+{% block shopifyhead %}
+{% endblock shopifyhead %}
+
+{% block extra_messages %}
+{% endblock %}
+
+{% block body %}
+
+    <div class="container">
+        <div class="page-header">
+            <h1><img src="{% static 'site/images/logo.png' %}"> <small>Charity Orders</small></h1>
+        </div>
+
+        <div class="row">
+
+            <div class="col-xs-12 col-sm-4 col-sm-offset-2">
+
+                <div class="panel panel-default">
+                    <div class="panel-heading text-center">
+                        <h4 class="dash-stats-metric">{{ round_up_count }}</h4>
+                        <p class="stats-title">Orders with Donations</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-xs-12 col-sm-4">
+
+                <div class="panel panel-default">
+                    <div class="panel-heading text-center">
+                        <h4 class="dash-stats-metric">{% money_localize round_up_total %}</h4>
+                        <p class="stats-title">Donation Total</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="row">
+
+            <div class="col-xs-12">
+
+                <div class="panel panel-default">
+                    <div class="panel-heading text-center">
+                        <h4>Round Up Charity Order List</h4>
+                    </div>
+                    <div class="panel-body">
+                        {% render_table table %}
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block beaconsuggest %}
+{% endblock beaconsuggest %}
+
+{% block scripts %}
+
+{% endblock %}

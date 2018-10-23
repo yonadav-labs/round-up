@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+  <!-- Latest compiled JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+  <script type="text/javascript" src="https://cdn.shopify.com/s/assets/external/app.js"></script>
+  <script type="text/javascript">
+        ShopifyApp.init({
+            apiKey: '{{ SHOPIFY_APP_API_KEY }}',
+            shopOrigin: 'https://{{ user.myshopify_domain }}'
+        });
+    </script>
+
+    {% block styles %}
+    {% endblock styles %}
+
+    <!-- Custom tags for the head tag -->
+    {% block extrahead %}{% endblock extrahead %}
+
+</head>
+<body>
+
+    <!-- Start of body content -->
+    <div class="Page__Content">
+        {% block body %}{% endblock %}
+    </div>
+    <!-- End of body content -->
+
+    {% block extrafoot %}{% endblock extrafoot %}
+
+    {% block scripts %}
+    {% endblock scripts %}
+  </body>
+</html>

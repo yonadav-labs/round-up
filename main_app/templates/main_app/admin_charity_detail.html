@@ -1,0 +1,73 @@
+{% extends "_admin_base.html" %}
+{% load staticfiles %}
+{% block headerpagetitle %}
+    {% if form.instance.id %}
+        {{ form.instance.name }} Details
+    {% else %}
+        Create Charity
+    {% endif %}
+{% endblock headerpagetitle %}
+
+{% block headerbread %}
+{% endblock headerbread %}
+
+{% block styles %}
+{% endblock styles %}
+
+{% block pagespecificstyles %}
+{% endblock pagespecificstyles %}
+
+{% load crispy_forms_tags %}
+
+{% block extrahead %}
+{% endblock extrahead %}
+
+{% block shopifyhead %}
+{% endblock shopifyhead %}
+
+{% block extra_messages %}
+{% endblock %}
+
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb "Charities" "main_app:admin_charity_list" %}
+
+    {% if form.instance.id %}
+        {% breadcrumb form.instance.name "#" %}
+    {% else %}
+        {% breadcrumb "Create Charity" "#" %}
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+
+<div class="panel panel-default">
+  <div class="panel-heading clearfix">
+     {% if form.instance.id %}
+        {{ form.instance.name }} details
+    {% else %}
+        Create a new charity
+    {% endif %}
+  </div>
+
+  <div class="panel-body">
+
+      <form action="" method="post"  enctype="multipart/form-data">
+            {% crispy form %}
+            {% if form.instance.id %}
+            <input name="delete" type="submit" value="Delete" class="btn btn-danger pull-left">
+            {% endif %}
+            <input name="submit" type="submit" value="Submit" class="btn btn-primary pull-right">
+      </form>
+
+  </div>
+</div>
+
+{% endblock %}
+
+{% block pagespecificjs %}
+{% endblock pagespecificjs %}
+
+{% block scripts %}
+{% endblock %}

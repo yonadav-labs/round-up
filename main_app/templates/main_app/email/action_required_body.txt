@@ -1,0 +1,24 @@
+Hello there,
+
+We noticed that you have not finished setting up the Round Up for charity app on your Shopify store {{ myshopify_domain }}. We have just released a new update that includes a dashboard to track all your donations, makes the installation easier, and the app more customized for your store.
+
+If you are not comfortable installing the app just reply to this email and our tech team will take care of it for you quickly and at no cost!
+
+You can complete the app setup by following these steps:
+
+1. Log in to your Shopify admin panel
+2. On the left sidebar, click on "apps"
+3. Click on the "Round Up for Charity" app
+4. Complete the steps in the setup wizard
+
+We are currently offering free setup and customization of the app. If you would like us to take care of the setup please let me know by replying directly to this email with the name of the charity that you would like to support. The app setup will take less than 20 minutes and will not interfere with your normal store operations. 
+
+If you have any questions please feel free to contact me directly at any time!
+
+Cheers,
+
+Joshua Kleyman
+Director - Round Up for Charity 
+Vesey Foundation
+335 Madison Ave, FL. 4
+New York, NY 10017

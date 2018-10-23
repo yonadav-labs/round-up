@@ -1,0 +1,55 @@
+{% if charge.paid %}Your {{ site.name }} account was successfully charged ${{ charge.amount|floatformat:2 }} to the credit card ending in {{ charge.card.last4 }}. The invoice below is for your records.
+
+Congratulations! A donation has been made in your name. Details below:
+
+Customer (Shopify Store): {% block customer_name %}{{ charge.customer.user }}{% endblock %}
+Charity name: {{ current_charity_name }}
+Amount: ${{ charge.amount|floatformat:2 }} USD
+
+The donation may take up to 5 business days to be processed by the charity recipient.
+
+========================================================
+INVOICE #{{ charge.pk }}     {{ charge.created_at|date:"F d, Y" }}
+........................................................
+Invoice amount: ${{ charge.amount|floatformat:2 }}
+PAID BY CREDIT CARD: -${{ charge.amount|floatformat:2 }}
+
+These charges were made for the Vesey Foundation's 'Round Up App' Charitable donations which you have installed on your Shopify store.
+
+========================================================
+{% else %}{% if charge.refunded %}Your credit card ending in {{ charge.card.last4 }} was refunded ${{ charge.amount|floatformat:2 }}.
+{% else %}
+Hello,
+
+We noticed that there was an issue with your recent donation collection. You can update your billing information using the steps below:
+
+1. Log in to your Shopify admin
+2. On the left sidebar, select “apps”
+3. From the list of installed apps, select “round up for charity”
+4. On the top of the page, select “payment settings” to update your billing info
+
+We failed to charge your credit card ending in {{ charge.card.last4 }} for the amount ${{ charge.amount|floatformat:2 }}.
+
+Please login to your Shopify store and view the Vesey Round Up app. You may need to review your payment details.
+
+If you have any questions please feel free to contact us by email here or reply directly this message.
+
+Cheers,
+
+Joshua Kleyman
+Director - Round Up
+Vesey Foundation
+335 Madison Ave, Fl. 4
+New York, NY 10017
+
+{% endif %}{% endif %}
+
+If you have any questions please feel free to contact me directly at any time!
+
+---
+Cheers,
+Joshua Kleyman
+Director - Round Up
+Vesey Foundation
+335 Madison Ave, FL. 4
+New York, NY 10017

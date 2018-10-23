@@ -1,0 +1,40 @@
+{% load thumbnail %}
+<div class="table-container table-responsive">
+
+        <table class="table">
+
+                <thead>
+                <tr>
+
+                        <th class="charity_logo">Selection</th>
+
+                        <th class="charity_logo"></th>
+
+                        <th class="charity_name">Name</th>
+
+                        <th class="description">Description</th>
+
+                </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for charity in all_charities %}
+                    <tr class="even">
+
+                            <td class="charity_switch">
+                                <label class="switch" id="switch-{{ charity.id }}"><input class="checkbox-slider" type="checkbox" data-api-src="/{{ request.user.store_url_str }}/charity/{{ charity.id }}/toggle/" value="{{ charity.id }}" {% if charity_instance.selected_charity.id == charity.id %}checked{%else%}{%endif%}><span class="slider round"></span></label> <i id="loading-icon-{{ charity.id }}" class="fa fa-2x fa-circle-o-notch fa-spin fa-fw loader-fa-icon-hide"></i>
+                            </td>
+
+                            <td class="charity_logo"><img class="img-thumbnail" src="{{ charity.charity_logo|thumbnail_url:'charity_logo' }}" alt="{{ charity.name }} thumbnail" /></td>
+
+                            <td class="charity_name"><a href="{{ charity.website }}" target="_blank">{{ charity.name }}</a></td>
+
+                            <td class="description">{{ charity.description|truncatechars:225 }}</td>
+
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+        </table>
+</div>

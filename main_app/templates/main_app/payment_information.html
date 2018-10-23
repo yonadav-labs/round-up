@@ -1,0 +1,205 @@
+{% extends "_base.html" %}
+{% load staticfiles %}
+{% block headerpagetitle %}Payment settings{% endblock headerpagetitle %}
+
+{% block headerbuttons %}
+primary: {"label":"Setup Instructions","target":"app","href":"{% url 'main_app:tutorial' store_url=request.user.store_url_str %}"},
+secondary: [{"label":"My Charity Orders","target":"app","href":"{% url 'main_app:transaction_list' store_url=request.user.store_url_str %}"},
+{"label":"Charity Settings","target":"app","href":"{% url 'main_app:charity_selection' store_url=request.user.store_url_str %}"},
+{"label":"Payment Settings","target":"app","href":"{% url 'main_app:payment_information' store_url=request.user.store_url_str %}"},
+{ "label": "•••",
+                type: "dropdown",
+                links: [
+                         {"label":"About Vesey","target":"app","href":"{% url 'main_app:about' store_url=request.user.store_url_str %}"},
+                         {"label":"Contact us","target":"app","href":"{% url 'main_app:contact' store_url=request.user.store_url_str %}"},
+                         {"label":"Installation instructions","target":"app","href":"{% url 'main_app:tutorial' store_url=request.user.store_url_str %}"},
+                       ]
+            }]
+{% endblock headerbuttons %}
+
+{% block headerbread %}
+{% endblock headerbread %}
+
+{% block styles %}
+<link rel='stylesheet' href='{% static "site/css/stripe.css" %}'>
+{% endblock styles %}
+
+{% load crispy_forms_tags %}
+
+{% block extrahead %}
+<script src="https://js.stripe.com/v3/"></script>
+{% endblock extrahead %}
+
+{% block shopifyhead %}
+{% endblock shopifyhead %}
+
+{% block extra_messages %}
+{% endblock %}
+
+{% block body %}
+
+    <div class="container">
+        <div class="page-header">
+            <div class="row">
+                <div class="col-xs-12 col-sm-7">
+                    <h1><img src="{% static 'site/images/logo.png' %}"> <small>Payment settings</small></h1>
+                </div>
+
+                <div class="col-xs-12 col-sm-5 payment-history">
+                    <a href="{% url 'main_app:invoice_list' store_url=request.user.store_url_str %}" class="btn btn-info pull-right">View payment history</a>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="row">
+
+            <div class="col-xs-12">
+                <p>The Round Up for Charity app collects donations by credit card. Please fill out the secure form below so that donations can be processed and sent to your selected charity recipient.</p>
+            </div>
+
+            {% if cards %}
+            <div class="col-xs-12">
+
+                <div class="panel panel-default">
+                    <div class="panel-heading text-center">
+                        <h4>Current payment information</h4>
+                    </div>
+                    <div class="panel-body">
+
+                        <div class="col-xs-12 col-md-offset-3 col-md-6 text-center">
+
+                            {% for card in cards%}
+                            <p>{{card.brand}} - <b>{{card.last4}}</b> - exp: {{card.exp_month}}/{{card.exp_year}}</p>
+                            {% endfor %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+            {% endif %}
+
+            <div class="col-xs-12">
+
+                <div class="panel panel-default">
+                    <div class="panel-body">
+
+                        <div class="col-xs-12 col-md-offset-3 col-md-6">
+
+                            <form action="" method="post" id="payment-form">{% csrf_token %}
+                              <div class="form-row text-center">
+                                <label for="card-element">
+                                  Enter your payment information
+                                </label>
+                                <hr>
+                                <div id="card-element">
+                                  <!-- a Stripe Element will be inserted here. -->
+                                </div>
+
+                                <!-- Used to display Element errors -->
+                                <div id="card-errors" role="alert"></div>
+                              </div>
+
+                              <button id="stripe-btn" class="btn btn-success btn-block">Save credit card</button>
+                            </form>
+                        </div>
+
+                    </div>
+
+                    <div class="panel-footer text-center">
+                        <div>
+                            <span class="my-text">Powered and secured by </span>
+                            <span class="fa fa-cc-stripe fa-2x" style=" vertical-align: middle;"></span>
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block beaconsuggest %}
+{% endblock beaconsuggest %}
+
+{% block scripts %}
+<script>
+    var stripe = Stripe('{{ STRIPE_PUBLIC_KEY }}');
+    var elements = stripe.elements();
+
+    function stripeTokenHandler(token) {
+      // Insert the token ID into the form so it gets submitted to the server
+      var form = document.getElementById('payment-form');
+      var hiddenInput = document.createElement('input');
+      hiddenInput.setAttribute('type', 'hidden');
+      hiddenInput.setAttribute('name', 'stripeToken');
+      hiddenInput.setAttribute('value', token.id);
+      form.appendChild(hiddenInput);
+
+      // Submit the form
+      form.submit();
+    }
+
+    $(function() {
+
+        // Custom styling can be passed to options when creating an Element.
+        var style = {
+          base: {
+            color: '#32325d',
+            lineHeight: '18px',
+            fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+            fontSmoothing: 'antialiased',
+            fontSize: '16px',
+            '::placeholder': {
+              color: '#aab7c4'
+            }
+          },
+          invalid: {
+            color: '#fa755a',
+            iconColor: '#fa755a'
+          }
+        };
+
+        // Create an instance of the card Element
+        var card = elements.create('card', {style: style});
+
+        // Add an instance of the card Element into the `card-element` <div>
+        card.mount('#card-element');
+
+        card.addEventListener('change', function(event) {
+          var displayError = document.getElementById('card-errors');
+          if (event.error) {
+            displayError.textContent = event.error.message;
+          } else {
+            displayError.textContent = '';
+          }
+        });
+
+        // Create a token or display an error when the form is submitted.
+        var form = document.getElementById('payment-form');
+        form.addEventListener('submit', function(event) {
+          event.preventDefault();
+
+          stripe.createToken(card).then(function(result) {
+            if (result.error) {
+              // Inform the customer that there was an error
+              var errorElement = document.getElementById('card-errors');
+              errorElement.textContent = result.error.message;
+            } else {
+              // Send the token to your server
+              stripeTokenHandler(result.token);
+            }
+          });
+        });
+    });
+
+</script>
+
+{% endblock %}

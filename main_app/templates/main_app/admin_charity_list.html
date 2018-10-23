@@ -1,0 +1,68 @@
+{% extends "_admin_base.html" %}
+{% load staticfiles %}
+{% block headerpagetitle %}Charity list{% endblock headerpagetitle %}
+
+{% block headerbread %}
+{% endblock headerbread %}
+
+{% block styles %}
+{% endblock styles %}
+
+{% block pagespecificstyles %}
+{% endblock pagespecificstyles %}
+
+{% load crispy_forms_tags %}
+{% load render_table from django_tables2 %}
+{% load querystring from django_tables2 %}
+
+{% block extrahead %}
+{% endblock extrahead %}
+
+{% block shopifyhead %}
+{% endblock shopifyhead %}
+
+{% block extra_messages %}
+{% endblock %}
+
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb "Charities" "main_app:admin_charity_list" %}
+
+{% endblock %}
+
+{% block body %}
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+      <div class="row clearfix">
+        <div class="hidden-xs col-md-6 clearfix">
+            {% if filter %}
+            <form action="" method="get" class="form form-inline">
+                {% crispy filter.form helper %}
+                <input type="submit" value="Apply Filter" class="btn btn-default pull-right">
+            </form>
+            {% endif %}
+        </div>
+        <div class="hidden-xs col-md-6 clearfix">
+            <div class="btn-group pull-right">
+                <a href="{% querystring '_export'='csv' %}" class="btn btn-default">CSV</a>
+                <a href="{% querystring '_export'='xlsx' %}" class="btn btn-default">XLSX</a>
+                <a href="{% url 'main_app:admin_charity_edit' %}" class="btn btn-success"><i class="fa fa-plus"></i>  Add charity</a>
+            </div>
+        </div>
+      </div>
+  </div>
+
+  <div class="panel-body">
+    {% render_table table %}
+  </div>
+</div>
+
+{% endblock %}
+
+{% block pagespecificjs %}
+{% endblock pagespecificjs %}
+
+{% block scripts %}
+{% endblock %}

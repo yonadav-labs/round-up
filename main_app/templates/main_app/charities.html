@@ -1,0 +1,75 @@
+{% extends "_base.html" %}
+{% load staticfiles %}
+{% block headerpagetitle %}Charity selection{% endblock headerpagetitle %}
+
+{% block headerbuttons %}
+primary: {"label":"Setup Instructions","target":"app","href":"{% url 'main_app:tutorial' store_url=request.user.store_url_str %}"},
+secondary: [{"label":"My Charity Orders","target":"app","href":"{% url 'main_app:transaction_list' store_url=request.user.store_url_str %}"},
+{"label":"Charity Settings","target":"app","href":"{% url 'main_app:charity_selection' store_url=request.user.store_url_str %}"},
+{"label":"Payment Settings","target":"app","href":"{% url 'main_app:payment_information' store_url=request.user.store_url_str %}"},
+{ "label": "•••",
+                type: "dropdown",
+                links: [
+                         {"label":"About Vesey","target":"app","href":"{% url 'main_app:about' store_url=request.user.store_url_str %}"},
+                         {"label":"Contact us","target":"app","href":"{% url 'main_app:contact' store_url=request.user.store_url_str %}"},
+                         {"label":"Installation instructions","target":"app","href":"{% url 'main_app:tutorial' store_url=request.user.store_url_str %}"},
+                       ]
+            }]
+{% endblock headerbuttons %}
+
+{% block headerbread %}
+{% endblock headerbread %}
+
+{% block styles %}
+
+{% endblock styles %}
+
+{% load thumbnail %}
+
+{% block extrahead %}
+{% endblock extrahead %}
+
+{% block shopifyhead %}
+{% endblock shopifyhead %}
+
+{% block extra_messages %}
+{% endblock %}
+
+{% block body %}
+    <div id="overlay"></div>
+    <div class="container">
+        <div class="page-header">
+            <h1><img src="{% static 'site/images/logo.png' %}"> <small>Charity selection</small></h1>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-body">
+
+                <div class="row">
+
+                    <div class="col-xs-12">
+                        <p>We are proud to support innovative nonprofit organizations around the world. All donations raised through this round up program are passed on to our charity partners. During setup you will be able to choose which charity your store will support.</p>
+                        <p>If you are interested in submitting a new charity for review please <a href="{% url 'main_app:contact' store_url=request.user.store_url_str %}">contact us here</a>.</p>
+                    </div>
+
+                    <div class="col-xs-12">
+                        <hr>
+                        <h2>Your current charity: {% if charity_instance.selected_charity %}<span class="label label-success" id="charity-label">{{ charity_instance.selected_charity.name }}</span>{%else%}<span class="label label-default" id="charity-label">Not set</span>{%endif%}</h2>
+                    </div>
+
+                </div>
+
+                {% include 'main_app/charity_table.html' %}
+
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block beaconsuggest %}
+{% endblock beaconsuggest %}
+
+{% block scripts %}
+<script type="text/javascript" src='{% static "site/js/charity_selector.js" %}'></script>
+{% endblock %}

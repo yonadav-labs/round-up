@@ -1,0 +1,12 @@
+The following customer is requesting snippet setup help:
+Validated Store: {{ myshopify_domain }}
+Reply to email: {{ customer_email }}
+
+Begin to create a collaborator account with this link:
+https://partners.shopify.com/{{partner_ID}}/managed_stores/new/?shop_permanent_domain={{ myshopify_domain }}
+
+Permissions required (click the checkbox on the above links page):
+- Themes
+
+Message for customer (copy and paste):
+You requested that the Vesey Foundation support team assist you with installing the HTML snippet for the Round Up app on your cart page. Please accept this collaborator account so that we can assist you.

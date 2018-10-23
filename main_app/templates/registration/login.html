@@ -1,0 +1,54 @@
+{% extends "_admin_base_barren.html" %}
+{% load staticfiles %}
+{% block headerpagetitle %}
+        Sign in to Vesey Round Up
+{% endblock headerpagetitle %}
+
+{% block headerbread %}
+{% endblock headerbread %}
+
+{% block styles %}
+{% endblock styles %}
+
+{% block admin_override %}
+  <link rel='stylesheet' href='{% static "site/css/login.css" %}'>
+{% endblock admin_override %}
+
+{% load crispy_forms_tags %}
+
+{% block extrahead %}
+{% endblock extrahead %}
+
+{% block shopifyhead %}
+{% endblock shopifyhead %}
+
+{% block extra_messages %}
+{% endblock %}
+
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+{% endblock %}
+
+{% block body %}
+
+<div class="wrapper">
+    <form class="login" method="post">{% csrf_token %}
+        <p class="title">Log in</p>
+
+        <input name="username" id="username" type="text" placeholder="Username" autofocus="">
+        <i class="fa fa-user"></i>
+
+        <input name="password" id="password" type="password" placeholder="Password">
+        <i class="fa fa-unlock-alt"></i>
+
+        <button><i class="spinner"></i><span class="state">Log in</span></button>
+    </form>
+</div>
+
+{% endblock %}
+
+{% block pagespecificjs %}
+{% endblock pagespecificjs %}
+
+{% block scripts %}
+{% endblock %}

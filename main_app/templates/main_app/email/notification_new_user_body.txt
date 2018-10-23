@@ -1,0 +1,8 @@
+A new Shopify store downloaded Round Up. Details below:
+
+Time: {{ datetime_installed }}
+Store Name: {{ store_name }}
+Contact: {{ contact_name }}
+Email: {{ email_address }}
+Phone: {{ contact_phone }}
+Store URL: {{ myshopify_domain }}

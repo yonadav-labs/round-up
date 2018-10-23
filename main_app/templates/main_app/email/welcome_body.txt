@@ -1,0 +1,23 @@
+Hi {{ contact_name }},
+
+Thanks for downloading the Round Up app on your Shopify store {{ myshopify_domain }}! It is because of generous and innovative store owners like yourself that we can donate over $100,000 per month to charities across the world!
+
+We have made it simple to setup and manage the Round Up app. Through the Shopify admin select “apps” and then select “round up for charity” from the list of installed apps. From there  you can:
+
+- Track donations collected
+- Update your charity recipient
+- Update your billing and app settings
+
+If you don’t feel comfortable installing this code yourself, we would be happy to install it for you at no cost. Just reply back to this email with a time that is convenient for you to be in front of the computer and our support team will screen share with you to get the code installed. The whole process takes less than 20 minutes!
+
+If you have any questions about the Round Up app please feel free to contact me directly by email here - or you can reply directly to this email. We answer all questions within 12 hours!
+
+Thank you for supporting local non-profit organizations!
+
+Cheers,
+
+Joshua Kleyman
+Director - Round Up
+Vesey Foundation
+335 Madison Ave, Fl. 4
+New York, NY 10017

@@ -1,0 +1,1 @@
+[Shopify Round Up App - Action Required] - {{ myshopify_domain }}

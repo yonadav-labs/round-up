@@ -1,0 +1,493 @@
+{% extends "_base.html" %}
+{% load staticfiles %}
+{% block headerpagetitle %}Setup tutorial{% endblock headerpagetitle %}
+
+{% block headerbuttons %}
+secondary: [{"label":"About Vesey","target":"app","href":"{% url 'main_app:about' store_url=request.user.store_url_str %}"},
+{"label":"Contact Us and Support","target":"app","href":"{% url 'main_app:contact' store_url=request.user.store_url_str %}"}]
+{% endblock headerbuttons %}
+
+{% block headerbread %}
+{% endblock headerbread %}
+
+{% block styles %}
+    <link rel='stylesheet' href='{% static "site/css/nav-wizard.min.css" %}'>
+    <link rel='stylesheet' href='{% static "site/css/stripe.css" %}'>
+{% endblock styles %}
+
+{% load crispy_forms_tags %}
+
+{% block extrahead %}
+    <script src="https://js.stripe.com/v3/"></script>
+{% endblock extrahead %}
+
+{% block shopifyhead %}
+{% endblock shopifyhead %}
+
+{% block extra_messages %}
+{% endblock %}
+
+{% block body %}
+    <div id="overlay"></div>
+    <div class="container">
+        <div class="page-header">
+            <h1><img src="{% static 'site/images/logo.png' %}"> <small>Setup Instructions</small></h1>
+        </div>
+
+        <div class="wizard-progress-bar">
+            <ul class="nav nav-wizard">
+                <li id="wizard-charity"><a href="#"><span class="badge">1</span> Charity selection</a></li>
+                <li id="wizard-install"><a href="#"><span class="badge">2</span> Liquid installation</a></li>
+                <li id="wizard-payment"><a href="#"><span class="badge">3</span> Payment setup</a></li>
+            </ul>
+        </div>
+
+        <div class="panel-group" id="accordion">
+          <div id="charity-panel" class="panel panel-primary">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <a class="btn btn-link" data-toggle="collapse" data-parent="#accordion" href="#collapse-charity">
+                <span class="badge">1</span> Charity selection</a>
+                <span class="label label-success" id="charity-label">{{ charity_instance.selected_charity.name|default:"None selected" }}</span>
+              </h4>
+            </div>
+            <div id="collapse-charity" class="panel-collapse collapse in">
+              <div class="panel-body">
+
+                  {% include 'main_app/charity_table.html' %}
+
+              </div>
+            </div>
+          </div>
+          <div id="install-panel" class="panel panel-default">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <a class="btn btn-link" data-toggle="collapse" data-parent="#accordion" href="#collapse-install">
+                <span class="badge">2</span> Liquid installation</a>
+              </h4>
+            </div>
+            <div id="collapse-install" class="panel-collapse collapse">
+              <div class="panel-body">
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <blockquote>
+                            <p>The next step of the installation process is to add a small snippet of code to your website. You can follow the instructions below to complete this step yourself or click on the <a href="#request-collaborator-account-button">"request help"</a> button for our tech team to complete this for you within the next 6 hours (at no cost).</p>
+                            <p>Questions? <a href="{% url 'main_app:contact' store_url=request.user.store_url_str %}">Contact us.</a></p>
+                        </blockquote>
+                        <h4>Installation video:</h4>
+                        <iframe width="854" height="480" src="https://www.youtube.com/embed/pMxpnzC7XBA" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                        <h4>Installation instructions:</h4>
+                        <ul>
+                            <li>
+                                <p>1. From the admin panel, click “Online Store” under “Sales Channels”</p>
+                            </li>
+                            <li>
+                                <p>2. Click on “Themes”</p>
+                            </li>
+                            <li>
+                                <p>3. Click on “Actions” in the top right of the page next to the Customize button</p>
+                            </li>
+                            <li>
+                                <p>4. Select “Edit Code”</p>
+                            </li>
+                            <li>
+                                <p>5. You will see a bunch of “.liquid” files. Find one called “cart.liquid” or “cart-template.liquid” and click on it.</p>
+                            </li>
+                            <li>
+                                <p>6. Since this file’s structure depends on the theme, we are going to give general placement directions however the exact place to put this code will vary depending on the theme.</p>
+                                <p>We recommend placing this code after where the subtotal is placed and before the submit button.</p>
+                                <pre>
+
+&lt;div id="vesey_charity_embed_div" style="visibility: hidden;" data-currency="{% templatetag openvariable %} shop.money_format {% templatetag closevariable %}" data-cart-total="{% templatetag openvariable %} cart.total_price | money_without_currency | remove: '.00' {% templatetag closevariable %}">
+
+    &lt;input type="checkbox" id="vesey_charity_embed_checkbox" checked="checked" />
+    &lt;label for="vesey_charity_embed_checkbox" id="vesey_charity_embed_label">Round Up for Charity?&lt;/label>
+    &lt;span id="vesey_charity_embed_tooltip">&lt;/span>
+    &lt;span id="vesey_charity_embed_round_difference">&lt;/span>
+
+&lt;/div>
+
+                                </pre>
+                                <img class="img-thumbnail img-responsive" src="{% static 'site/images/1.png' %}">
+                            </li>
+                            <li>
+                                <p>7. Click “Save” in the top right of the code editor section.</p>
+                            </li>
+                        </ul>
+                    </div>
+
+
+
+                </div>
+
+              <div class="panel-footer clearfix liquid-action-footer">
+                  <form>{% csrf_token %}<button id="request-collaborator-account-button" class="btn btn-info pull-left" data-api-src="/{{ request.user.store_url_str }}/request-help/"><i id="help-btn-loading-icon" class="fa fa-circle-o-notch fa-spin fa-fw loader-fa-icon-hide"></i> Request help (let us do the work)</button></form>
+                  <p>OR</p>
+                  <button id="confirm-install" data-api-src="/{{ request.user.store_url_str }}/onboarding/confirm_install/" class="btn btn-primary pull-right"><i id="install-btn-loading-icon" class="fa fa-circle-o-notch fa-spin fa-fw loader-fa-icon-hide"></i>I have added the snippet, proceed to the next step</button>
+              </div>
+
+              </div>
+
+
+            </div>
+          </div>
+          <div id="payment-panel" class="panel panel-default">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <a class="btn btn-link" data-toggle="collapse" data-parent="#accordion" href="#collapse-payment">
+                <span class="badge">3</span> Payment setup</a>
+              </h4>
+            </div>
+            <div id="collapse-payment" class="panel-collapse collapse">
+              <div class="panel-body">
+                  <blockquote>
+                    <p>The Round Up for Charity app collects donations by credit card. Please fill out the secure form below so that donations can be processed and sent to your selected charity recipient.</p>
+                  </blockquote>
+
+                  <div class="col-xs-12 col-md-offset-3 col-md-6">
+
+                        <form action="" method="post" id="payment-form">{% csrf_token %}
+                          <div class="form-row text-center">
+                            <label for="card-element">
+                              Enter your payment information
+                            </label>
+                            <hr>
+                            <div id="card-element">
+                              <!-- a Stripe Element will be inserted here. -->
+                            </div>
+
+                            <!-- Used to display Element errors -->
+                            <div id="card-errors" role="alert"></div>
+                          </div>
+
+                          <button id="stripe-btn" class="btn btn-primary btn-block">Save credit card</button>
+                        </form>
+                  </div>
+
+              </div>
+
+              <div class="panel-footer text-center">
+                        <div>
+                            <span class="my-text">Powered and secured by </span>
+                            <span class="fa fa-cc-stripe fa-2x" style=" vertical-align: middle;"></span>
+                        </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block beaconsuggest %}
+{% endblock beaconsuggest %}
+
+{% block scripts %}
+<script type="text/javascript">
+    // Map boolean between Django and JQuery
+    var False = false;
+    var True = true;
+
+    var charity_selected = {{ request.user.has_charity }};
+    var user_verified_install = {{ request.user.has_verified_install }};
+    var step = 0;
+
+    // using jQuery get the Django CSRF token from cookies
+    function getCookieLocal(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    function toggle_install(api_src, csrftoken) {
+        $("#overlay").show();
+        $("#install-btn-loading-icon").removeClass( "loader-fa-icon-hide" );
+        // Disable button during load
+
+        //Show a loading thing
+        // Send AJAX form serialized to view
+        $.ajax({
+
+            //store_url=request.user.store_url_str
+            url : api_src,
+            type : "POST", // http method
+            data: {
+                csrfmiddlewaretoken: csrftoken,
+                install_verify: 'true'
+            },
+            // handle a successful response
+            success : function(json) {
+
+                // Change the text and tag color of the current charity div
+                $("#install-btn-loading-icon").addClass( "loader-fa-icon-hide" );
+                $('#collapse-install').slideUp(700);
+
+                $('#install-panel').removeClass('panel-primary');
+                $('#install-panel').addClass('panel-success');
+                $('#wizard-install').addClass('done');
+                $('#wizard-install').removeClass('active');
+                $('#install-panel').find('a').addClass('disabled');
+
+                $('#collapse-payment').slideDown(700);
+                $('#wizard-payment').addClass('active');
+                $('#payment-panel').addClass('panel-primary');
+                $('#payment-panel').find('a').removeClass('disabled');
+
+                $("#overlay").hide();
+
+                // Alert the user of the response
+                ShopifyApp.flashNotice(json.message);
+            },
+            // handle a non-successful response
+            error : function(xhr,errmsg,err) {
+                if (xhr == null || xhr.responseJSON == null ) {
+                      $("#install-btn-loading-icon").removeClass( "fa-circle-o-notch" );
+                      $("#install-btn-loading-icon").removeClass( "fa-spin" );
+                      $("#install-btn-loading-icon").addClass( "fa-exclamation-circle red" );
+                      // Alert the user of the response
+                      $("#overlay").hide();
+                      ShopifyApp.flashError("An unknown error occurred.");
+                }
+                else {
+                    // Alert the user of the response
+                      $("#install-btn-loading-icon").removeClass( "fa-circle-o-notch" );
+                      $("#install-btn-loading-icon").removeClass( "fa-spin" );
+                      $("#install-btn-loading-icon").addClass( "fa-exclamation-circle red" );
+                      $("#overlay").hide();
+                      ShopifyApp.flashError(xhr.responseJSON.message);
+                }
+            }
+        });
+    };
+
+    // Logic to handle ongoing state
+    $(function() {
+        var target = document.querySelector('#charity-label')
+        // create an observer instance
+        var observer = new MutationObserver(function(mutations) {
+            $('#collapse-charity').slideUp(700);
+
+            $('#charity-panel').removeClass('panel-primary');
+            $('#charity-panel').addClass('panel-success');
+            $('#wizard-charity').addClass('done');
+            $('#wizard-charity').removeClass('active');
+            $('#charity-panel').find('a').addClass('disabled');
+
+            $('#collapse-install').slideDown(700);
+            $('#wizard-install').addClass('active');
+            $('#install-panel').addClass('panel-primary');
+            $('#install-panel').find('a').removeClass('disabled');
+
+        });
+        // configuration of the observer:
+        var config = { attributes: true, childList: true, characterData: true };
+        // pass in the target node, as well as the observer options
+        observer.observe(target, config);
+
+
+        $( "#confirm-install" ).click(function() {
+            var csrftoken = getCookieLocal('csrftoken');
+            var api_src = $(this).data('api-src');
+            toggle_install(api_src, csrftoken);
+        });
+
+    });
+
+    // Logic for starting state
+    $(function() {
+
+        // !!!!!!!!!!!!!!!
+        // State is step 1
+        // !!!!!!!!!!!!!!!
+        // On page load check progression and set state
+        if (charity_selected === true ){
+            // Step is at least past 1
+            step = 2;
+
+            $('#charity-panel').removeClass('panel-primary');
+            $('#charity-panel').addClass('panel-success');
+            $('#wizard-charity').addClass('done');
+
+            // Make sure panel is minimized
+            $('#collapse-charity').removeClass('in');
+            $('#charity-panel').find('a').addClass('disabled')
+
+        }
+        else {
+            step = 1;
+
+            $('#wizard-charity').addClass('active');
+
+            // Disable the other steps for now
+            $('#install-panel').find('a').addClass('disabled')
+            $('#payment-panel').find('a').addClass('disabled')
+
+        }
+
+        if (step === 2 && user_verified_install === false) {
+            $('#wizard-install').addClass('active');
+
+            $('#install-panel').find('a').removeClass('disabled')
+            $('#collapse-install').addClass('in');
+            $('#install-panel').addClass('panel-primary');
+
+            $('#payment-panel').find('a').addClass('disabled')
+            $('wizard-payment').addClass('disabled')
+        }
+        else if (user_verified_install === true){
+            step = 3;
+
+            $('#payment-panel').addClass('panel-primary');
+
+            $('#install-panel').addClass('panel-success');
+            $('#install-panel').find('a').addClass('disabled')
+            $('#wizard-install').addClass('done');
+            $('#wizard-payment').addClass('active');
+            $('#collapse-install').removeClass('in');
+            $('#collapse-payment').addClass('in');
+
+        }
+
+    });
+
+    $(function() {
+        $("#request-collaborator-account-button").click(function(e) {
+            e.preventDefault();
+            var csrftoken = getCookieLocal('csrftoken');
+            var api_src = $(this).data('api-src');
+
+            ShopifyApp.Modal.confirm({
+                      title: "Request help from Vesey Foundation?",
+                      message: "The Vesey Foundation team will send you a request to add a Shopify partner collaborator account to your store. Once you accept this, we will add the code snippet within 6 hours.",
+                      okButton: "Yes, please help me",
+                      cancelButton: "No thanks"
+                }, function(result){
+                  if(result){
+                      $("#overlay").show();
+                      $("#help-btn-loading-icon").removeClass( "loader-fa-icon-hide" );
+
+                      $.ajax({
+                            type: "POST",
+                            url: api_src,
+                            data: {
+                                csrfmiddlewaretoken: csrftoken
+                            },
+                            success: function(result) {
+                                $("#help-btn-loading-icon").addClass( "loader-fa-icon-hide" );
+
+                                // Change the text and tag color of the current charity div
+                                $('#collapse-install').slideUp(700);
+
+                                $('#install-panel').removeClass('panel-primary');
+                                $('#install-panel').addClass('panel-success');
+                                $('#wizard-install').addClass('done');
+                                $('#wizard-install').removeClass('active');
+                                $('#install-panel').find('a').addClass('disabled');
+
+                                $('#collapse-payment').slideDown(700);
+                                $('#wizard-payment').addClass('active');
+                                $('#payment-panel').addClass('panel-primary');
+                                $('#payment-panel').find('a').removeClass('disabled');
+
+                                $("#overlay").hide();
+                                ShopifyApp.flashNotice("Your request was sent, we will contact you shortly.");
+                            },
+                            error: function(result) {
+                                $("#help-btn-loading-icon").addClass( "loader-fa-icon-hide" );
+                                $("#overlay").hide();
+                                ShopifyApp.flashError("Oops something went wrong, please contact us.");
+                            }
+                      });
+                  }
+            });
+
+        });
+    });
+</script>
+
+<script type="text/javascript" src='{% static "site/js/charity_selector.js" %}'></script>
+
+<script>
+    var stripe = Stripe('{{ STRIPE_PUBLIC_KEY }}');
+    var elements = stripe.elements();
+
+    function stripeTokenHandler(token) {
+      // Insert the token ID into the form so it gets submitted to the server
+      var form = document.getElementById('payment-form');
+      var hiddenInput = document.createElement('input');
+      hiddenInput.setAttribute('type', 'hidden');
+      hiddenInput.setAttribute('name', 'stripeToken');
+      hiddenInput.setAttribute('value', token.id);
+      form.appendChild(hiddenInput);
+
+      // Submit the form
+      form.submit();
+    }
+
+    $(function() {
+
+        // Custom styling can be passed to options when creating an Element.
+        var style = {
+          base: {
+            color: '#32325d',
+            lineHeight: '18px',
+            fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+            fontSmoothing: 'antialiased',
+            fontSize: '16px',
+            '::placeholder': {
+              color: '#aab7c4'
+            }
+          },
+          invalid: {
+            color: '#fa755a',
+            iconColor: '#fa755a'
+          }
+        };
+
+        // Create an instance of the card Element
+        var card = elements.create('card', {style: style});
+
+        // Add an instance of the card Element into the `card-element` <div>
+        card.mount('#card-element');
+
+        card.addEventListener('change', function(event) {
+          var displayError = document.getElementById('card-errors');
+          if (event.error) {
+            displayError.textContent = event.error.message;
+          } else {
+            displayError.textContent = '';
+          }
+        });
+
+        // Create a token or display an error when the form is submitted.
+        var form = document.getElementById('payment-form');
+        form.addEventListener('submit', function(event) {
+          event.preventDefault();
+
+          stripe.createToken(card).then(function(result) {
+            if (result.error) {
+              // Inform the customer that there was an error
+              var errorElement = document.getElementById('card-errors');
+              errorElement.textContent = result.error.message;
+            } else {
+              // Send the token to your server
+              stripeTokenHandler(result.token);
+            }
+          });
+        });
+    });
+
+</script>
+{% endblock %}

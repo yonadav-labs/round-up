@@ -1,0 +1,51 @@
+{% extends "_admin_base.html" %}
+{% load staticfiles %}
+{% block headerpagetitle %}Dev list{% endblock headerpagetitle %}
+
+{% block headerbread %}
+{% endblock headerbread %}
+
+{% block styles %}
+{% endblock styles %}
+
+{% block pagespecificstyles %}
+{% endblock pagespecificstyles %}
+
+{% load crispy_forms_tags %}
+
+{% block extrahead %}
+{% endblock extrahead %}
+
+{% block shopifyhead %}
+{% endblock shopifyhead %}
+
+{% block extra_messages %}
+{% endblock %}
+
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb "Dev stuff" "main_app:dev_actions" %}
+{% endblock %}
+
+{% block body %}
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+      <div class="row clearfix">
+          Dev actions
+      </div>
+  </div>
+
+  <div class="panel-body">
+    NOTHING!
+  </div>
+</div>
+
+{% endblock %}
+
+{% block pagespecificjs %}
+{% endblock pagespecificjs %}
+
+{% block scripts %}
+{% endblock %}

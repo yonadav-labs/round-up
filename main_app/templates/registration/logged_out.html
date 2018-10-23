@@ -1,0 +1,48 @@
+{% extends "_admin_base_barren.html" %}
+{% load staticfiles %}
+{% block headerpagetitle %}
+        Sign in to Vesey Round Up
+{% endblock headerpagetitle %}
+
+{% block headerbread %}
+{% endblock headerbread %}
+
+{% block styles %}
+{% endblock styles %}
+
+{% block admin_override %}
+  <link rel='stylesheet' href='{% static "site/css/login.css" %}'>
+{% endblock admin_override %}
+
+{% load crispy_forms_tags %}
+
+{% block extrahead %}
+{% endblock extrahead %}
+
+{% block shopifyhead %}
+{% endblock shopifyhead %}
+
+{% block extra_messages %}
+{% endblock %}
+
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+{% endblock %}
+
+{% block body %}
+
+<div class="wrapper">
+    <div class="login logged-out text-center">
+        <p class="title text-center">You've been logged out!</p>
+
+        <a href="{% url 'main_app:admin_login' %}">Log back in</a>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block pagespecificjs %}
+{% endblock pagespecificjs %}
+
+{% block scripts %}
+{% endblock %}
