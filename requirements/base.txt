@@ -14,7 +14,7 @@ django-bmemcached==0.2.3
 python-binary-memcached==0.26.1
 # django-heroku-memcacheify
 python-dateutil==2.6.1
-django-tables2==1.17.1
+django-tables2==1.16.0
 django_filter==1.1.0
 tablib==0.12.1
 django-bootstrap-breadcrumbs==0.8.2
