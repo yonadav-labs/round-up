@@ -196,8 +196,8 @@ DEFAULT_CURRENCY = 'USD'
 PINAX_STRIPE_HOOKSET = "main_app.hooks_stripe.HookSet"
 
 EMAIL_BACKEND = 'django_amazon_ses.EmailBackend'
-DEFAULT_FROM_EMAIL = PINAX_STRIPE_INVOICE_FROM_EMAIL = 'Vesey Foundation <team@vesey.org>'
-HELP_TO_MAILBOX_EMAIL = 'team@vesey.org'
+DEFAULT_FROM_EMAIL = PINAX_STRIPE_INVOICE_FROM_EMAIL = 'Round Up <shopifyroundup@gmail.com>'
+HELP_TO_MAILBOX_EMAIL = 'shopifyroundup@gmail.com'
 
 # TODO If Memory leak keeps occuring on task check out this thread: https://github.com/celery/celery/issues/3339
 CELERY_ACCEPT_CONTENT = ['json']

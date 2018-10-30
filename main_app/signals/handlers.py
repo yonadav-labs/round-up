@@ -132,7 +132,7 @@ def create_profile_handler(sender, instance, created, **kwargs):
             subject = subject.strip()
             message = render_to_string("main_app/email/notification_new_user_body.txt", ctx)
 
-            email = 'team@vesey.org'
+            email = 'shopifyroundup@gmail.com'
 
             num_sent = EmailMessage(
                 subject,
