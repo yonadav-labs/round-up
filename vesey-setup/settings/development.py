@@ -106,7 +106,7 @@ if on_heroku:
 else:
     SHOPIFY_APP_API_SECRET = "9435e97c2766d3f84a6b37d20cb72084"
 
-APP_BASE_URL = ['2ec50f46.ngrok.io', 'vesey.herokuapp.com', 'roundup.vesey.org']
+APP_BASE_URL = ['2ec50f46.ngrok.io', 'vesey.herokuapp.com', 'roundup.vesey.org', 'shopifyroundup.herokuapp.com']
 
 if on_heroku:
     PINAX_STRIPE_PUBLIC_KEY =  ENV_JSON.get('PINAX_STRIPE_PUBLIC_KEY', None)
