@@ -12,7 +12,7 @@ django-money==0.12.3
 django-countries==5.0
 django-bmemcached==0.2.3
 python-binary-memcached==0.26.1
-# django-heroku-memcacheify
+django-heroku-memcacheify
 python-dateutil==2.6.1
 django-tables2==1.16.0
 django_filter==1.1.0
